@@ -1,0 +1,40 @@
+import { Meta } from "@storybook/blocks";
+import {
+  ArgTypes,
+  Description,
+  Primary,
+  Stories,
+  Subtitle,
+  Title,
+} from "@storybook/blocks";
+
+<Meta title="API Reference" />
+
+# API Reference
+
+## SnowCanvas Component
+
+The main component that renders snowfall effects.
+
+### Props
+
+<ArgTypes of={SnowCanvas} />
+
+### Example Usage
+
+```tsx
+import { SnowCanvas } from "@openflygroup/snowfall";
+
+function App() {
+  return (
+    <SnowCanvas
+      accumulationElements={[".card", "h1", ".snow-surface"]}
+      className="snow-overlay"
+      style={{ opacity: 0.8 }}
+      onSnowflakeStuck={(elementId, flake) => {
+        console.log(`Snowflake stuck to ${elementId}:`, flake);
+      }}
+    />
+  );
+}
+```

@@ -170,10 +170,27 @@ export function SnowCanvas({
   if (!isEnabled) return null;
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={`fixed inset-0 pointer-events-none z-50 ${className}`}
-      style={style}
-    />
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        pointerEvents: "none",
+        zIndex: 50,
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        className={`fixed inset-0 pointer-events-none z-50 ${className}`}
+        style={{
+          ...style,
+          display: "block",
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </div>
   );
 }

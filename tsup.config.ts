@@ -11,9 +11,8 @@ export default defineConfig({
   treeshake: true,
   external: ["react", "react-dom", "zustand"],
   outDir: "dist",
-  esbuildOptions(options) {
-    options.banner = {
-      js: '"use client";',
-    };
+  injectStyle: false,
+  banner: {
+    js: '"use client";',
   },
 });

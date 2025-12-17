@@ -1,0 +1,9 @@
+{
+  "projectId": "snowfall-project",
+  "buildScriptName": "build-storybook",
+  "branch": "main",
+  "storybookBaseDir": ".",
+  "storybookConfigDir": ".storybook",
+  "exitOnceUploaded": true,
+  "zip": true
+}

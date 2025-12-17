@@ -1,0 +1,82 @@
+import { Meta } from "@storybook/blocks";
+import { SnowCanvas } from "../src/components/SnowCanvas";
+
+<Meta title="Introduction" />
+
+# @openflygroup/snowfall
+
+<Story name="Showcase">
+  {() => {
+    const style = {
+      width: "100%",
+      height: "400px",
+      background: "linear-gradient(to bottom, #0f172a, #1e293b)",
+      borderRadius: "12px",
+      position: "relative",
+      overflow: "hidden",
+    };
+
+    return (
+      <div style={style}>
+        <SnowCanvas />
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+            color: "white",
+            zIndex: 100,
+          }}
+        >
+          <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>
+            ❄️ Snowfall
+          </h1>
+          <p style={{ fontSize: "1.2rem", opacity: 0.9 }}>
+            Beautiful, customizable snowfall effects for React
+          </p>
+        </div>
+      </div>
+    );
+
+}}
+
+</Story>
+
+## ✨ Features
+
+- **🎨 Fully Customizable** - Control size, color, shape, and speed of snowflakes
+- **🏔️ Smart Accumulation** - Snow accumulates on DOM elements with physics
+- **⏱️ Auto Fading** - Snowflakes fade naturally after specified time
+- **📱 Performant** - Canvas-based rendering for smooth 60fps animations
+- **🎯 TypeScript** - Fully typed with excellent IDE support
+- **🔧 Extensible** - Plugin system and custom renderers
+- **🎮 Interactive Controls** - Built-in controls panel
+
+## 🚀 Quick Start
+
+```bash
+npm install @openflygroup/snowfall zustand
+```
+
+```tsx
+import {
+  SnowCanvas,
+  SnowAccumulation,
+  SnowControls,
+} from "@openflygroup/snowfall";
+
+function WinterApp() {
+  return (
+    <>
+      <SnowCanvas accumulationElements={[".card", "h1", "button"]} />
+      <SnowAccumulation elementId="header" />
+      <SnowControls />
+
+      <h1 className="relative">Winter Wonderland</h1>
+      <div className="card relative">Snow will accumulate here</div>
+    </>
+  );
+}
+```
