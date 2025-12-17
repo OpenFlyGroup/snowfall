@@ -1,0 +1,46 @@
+# source maps
+src/
+*.ts
+*.tsx
+!*.d.ts
+
+# tests files
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage/
+
+# Storybook
+docs/
+.storybook/
+storybook-static/
+chromatic/
+
+# config files
+*.config.*
+.eslintrc.*
+.prettierrc.*
+.changeset/
+
+# OS files
+.DS_Store
+Thumbs.db
+.editorconfig
+.gitattributes
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
