@@ -91,7 +91,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "eslint-plugin-storybook": "^10.1.10",
     "globals": "^16.5.0",
-    "jsdom": "^27.0.1",
+    "jsdom": "^27.3.0",
     "lucide-react": "^0.561.0",
     "playwright": "^1.57.0",
     "postcss": "^8.5.6",
