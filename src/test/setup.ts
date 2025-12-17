@@ -18,9 +18,9 @@ window.ResizeObserver = ResizeObserverMock;
 
 // Mock for requestAnimationFrame
 window.requestAnimationFrame = (callback) => {
-  return setTimeout(() => callback(Date.now()), 0);
+  return setTimeout(() => callback(Date.now()), 0) as unknown as number;
 };
 
 window.cancelAnimationFrame = (id) => {
-  clearTimeout(id);
+  clearTimeout(id as unknown as NodeJS.Timeout);
 };
