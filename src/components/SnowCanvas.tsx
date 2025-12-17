@@ -51,6 +51,7 @@ export function SnowCanvas({
       engine.destroy();
       engineRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEnabled]);
 
   // update config

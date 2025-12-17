@@ -1,60 +1,22 @@
 "use client";
 
+import React from "react";
 import { Snowflake, Settings, X, Palette } from "lucide-react";
 import { useSnowStore } from "../stores/snow-store";
-import type { SnowTheme, SnowIntensity } from "../types";
-import { useState } from "react";
+import type { SnowConfig } from "../types";
 
-const intensityPresets: Record<SnowIntensity, Partial<any>> = {
-  light: { intensity: 50, windStrength: 0.5 },
-  medium: { intensity: 100, windStrength: 1 },
-  heavy: { intensity: 200, windStrength: 1.5 },
-  blizzard: { intensity: 300, windStrength: 2 },
-};
+interface IntensityPreset {
+  name: string;
+  config: Partial<SnowConfig>;
+}
 
-const themePresets: Record<SnowTheme, any> = {
-  default: {
-    colors: ["rgba(255, 255, 255, opacity)"],
-  },
-  blue: {
-    colors: [
-      "rgba(255, 255, 255, opacity)",
-      "rgba(173, 216, 230, opacity)",
-      "rgba(135, 206, 250, opacity)",
-    ],
-  },
-  purple: {
-    colors: [
-      "rgba(255, 255, 255, opacity)",
-      "rgba(216, 191, 216, opacity)",
-      "rgba(221, 160, 221, opacity)",
-    ],
-  },
-  gold: {
-    colors: [
-      "rgba(255, 255, 255, opacity)",
-      "rgba(255, 215, 0, opacity)",
-      "rgba(255, 248, 220, opacity)",
-    ],
-  },
-  rainbow: {
-    colors: [
-      "rgba(255, 255, 255, opacity)",
-      "rgba(255, 192, 203, opacity)",
-      "rgba(173, 216, 230, opacity)",
-      "rgba(144, 238, 144, opacity)",
-      "rgba(255, 255, 224, opacity)",
-    ],
-  },
-};
+interface ThemePreset {
+  name: string;
+  config: Partial<SnowConfig>;
+}
 
-/**
- * Component for rendering snowfall effect controls.
- * Includes buttons for toggling snowfall, changing intensity, theme and presets.
- * Also includes input fields for customizing wind strength and accumulation.
- */
 export function SnowControls() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const {
     isEnabled,
     toggle,
@@ -65,9 +27,49 @@ export function SnowControls() {
     applyPreset,
   } = useSnowStore();
 
+  const intensityPresets: IntensityPreset[] = [
+    { name: "light", config: { intensity: 50, windStrength: 0.5 } },
+    { name: "medium", config: { intensity: 100, windStrength: 1 } },
+    { name: "heavy", config: { intensity: 200, windStrength: 1.5 } },
+    { name: "blizzard", config: { intensity: 300, windStrength: 2 } },
+  ];
+
+  const themePresets: ThemePreset[] = [
+    { name: "default", config: { colors: ["rgba(255, 255, 255, opacity)"] } },
+    {
+      name: "blue",
+      config: {
+        colors: [
+          "rgba(255, 255, 255, opacity)",
+          "rgba(173, 216, 230, opacity)",
+          "rgba(135, 206, 250, opacity)",
+        ],
+      },
+    },
+    {
+      name: "purple",
+      config: {
+        colors: [
+          "rgba(255, 255, 255, opacity)",
+          "rgba(216, 191, 216, opacity)",
+          "rgba(221, 160, 221, opacity)",
+        ],
+      },
+    },
+    {
+      name: "gold",
+      config: {
+        colors: [
+          "rgba(255, 255, 255, opacity)",
+          "rgba(255, 215, 0, opacity)",
+          "rgba(255, 248, 220, opacity)",
+        ],
+      },
+    },
+  ];
+
   return (
     <>
-      {/* open/close button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-4 right-4 z-50 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105"
@@ -76,11 +78,9 @@ export function SnowControls() {
         {isOpen ? <X size={24} /> : <Snowflake size={24} />}
       </button>
 
-      {/* snowfall controls */}
       {isOpen && (
         <div className="fixed bottom-20 right-4 z-50 w-80 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-gray-200">
           <div className="space-y-6">
-            {/* header */}
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <Snowflake size={20} />
@@ -98,19 +98,18 @@ export function SnowControls() {
               </button>
             </div>
 
-            {/* Intensity */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Intensity
               </label>
               <div className="flex gap-2 mb-2">
-                {Object.entries(intensityPresets).map(([name, preset]) => (
+                {intensityPresets.map((preset) => (
                   <button
-                    key={name}
-                    onClick={() => updateConfig(preset)}
+                    key={preset.name}
+                    onClick={() => updateConfig(preset.config)}
                     className="flex-1 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg capitalize"
                   >
-                    {name}
+                    {preset.name}
                   </button>
                 ))}
               </div>
@@ -126,26 +125,24 @@ export function SnowControls() {
               />
             </div>
 
-            {/* Themes */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Palette size={16} className="inline mr-2" />
                 Theme
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {Object.entries(themePresets).map(([name, theme]) => (
+                {themePresets.map((theme) => (
                   <button
-                    key={name}
-                    onClick={() => updateConfig(theme)}
+                    key={theme.name}
+                    onClick={() => updateConfig(theme.config)}
                     className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg capitalize"
                   >
-                    {name}
+                    {theme.name}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Presets */}
             {presets.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -166,7 +163,6 @@ export function SnowControls() {
               </div>
             )}
 
-            {/* Additional Settings */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-700">Wind Strength</span>
@@ -198,7 +194,6 @@ export function SnowControls() {
               </div>
             </div>
 
-            {/* Reset */}
             <button
               onClick={resetConfig}
               className="w-full px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg"

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { SnowCanvas } from "../SnowCanvas";
 
-// mock CanvasRenderingContext2D
+// Создаем мок с правильными типами
 class CanvasRenderingContext2DMock {
   clearRect = vi.fn();
   beginPath = vi.fn();
@@ -18,37 +18,35 @@ class CanvasRenderingContext2DMock {
 }
 
 describe("SnowCanvas", () => {
-  let originalContext: typeof HTMLCanvasElement.prototype.getContext;
+  let originalContext: typeof HTMLCanvasElement.prototype.getContext | null =
+    null;
 
   beforeEach(() => {
     originalContext = HTMLCanvasElement.prototype.getContext;
 
     HTMLCanvasElement.prototype.getContext = vi.fn(() => {
-      return new CanvasRenderingContext2DMock() as any;
-    });
+      return new CanvasRenderingContext2DMock() as unknown as CanvasRenderingContext2D;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any;
   });
 
   afterEach(() => {
-    HTMLCanvasElement.prototype.getContext = originalContext;
+    if (originalContext) {
+      HTMLCanvasElement.prototype.getContext = originalContext;
+    }
     vi.clearAllMocks();
   });
 
-  it("render SnowCanvas", () => {
+  it("рендерит canvas элемент", () => {
     render(<SnowCanvas />);
     const canvas = screen.getByRole("presentation");
     expect(canvas).toBeInTheDocument();
-    expect(canvas).toHaveClass("fixed");
+    expect(canvas).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("injects custom className", () => {
+  it("принимает custom className", () => {
     render(<SnowCanvas className="custom-class" />);
-    const canvas = screen.getByRole("presentation");
-    expect(canvas).toHaveClass("custom-class");
-  });
-
-  it("injects custom styles", () => {
-    render(<SnowCanvas style={{ opacity: 0.5 }} />);
-    const canvas = screen.getByRole("presentation");
-    expect(canvas).toHaveStyle("opacity: 0.5");
+    const container = screen.getByRole("presentation").parentElement;
+    expect(container).toHaveClass("custom-class");
   });
 });

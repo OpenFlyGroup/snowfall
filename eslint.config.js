@@ -3,7 +3,6 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
-import storybookPlugin from "eslint-plugin-storybook";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -13,6 +12,7 @@ export default defineConfig([
     "storybook-static",
     ".storybook",
     "coverage",
+    "node_modules",
   ]),
 
   // Базовые правила для всех файлов
@@ -28,7 +28,10 @@ export default defineConfig([
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      ...reactRefresh.configs.vite.rules,
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
     },
     languageOptions: {
       ecmaVersion: 2020,
@@ -37,12 +40,6 @@ export default defineConfig([
         ...globals.node,
       },
     },
-  },
-
-  // Storybook правила только для .stories файлов
-  {
-    files: ["**/*.stories.@(ts|tsx|js|jsx|mjs|cjs)"],
-    ...storybookPlugin.configs["flat/recommended"],
   },
 
   // Дополнительные правила
@@ -62,10 +59,6 @@ export default defineConfig([
           prefer: "type-imports",
           fixStyle: "inline-type-imports",
         },
-      ],
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
       ],
     },
   },
