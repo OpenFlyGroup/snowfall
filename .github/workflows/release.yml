@@ -5,6 +5,8 @@ on:
     branches:
       - master
 
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   release:
     name: Release
@@ -39,8 +41,10 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: npm run release
           version: npm run version
+          publish: npm run release
+          commit: "chore: release"
+          title: "chore: release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
