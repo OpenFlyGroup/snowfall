@@ -61,7 +61,10 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "ci": "npm run type-check && npm run lint && npm run build",
-    "prepublishOnly": "npm run ci"
+    "prepublishOnly": "npm run ci",
+    "release": "changeset publish",
+    "version": "changeset version && npm install",
+    "changeset": "changeset"
   },
   "dependencies": {
     "react": ">=18.0.0",
