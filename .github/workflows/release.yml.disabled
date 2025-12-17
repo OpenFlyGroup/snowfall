@@ -5,19 +5,22 @@ on:
     branches:
       - master
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.repository == 'OpenFlyGroup/snowfall'
+
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,8 +40,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Setup NPM for Publishing
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          npm whoami
+
       - name: Create Release Pull Request or Publish to npm
-        id: changesets
         uses: changesets/action@v1
         with:
           version: npm run version
