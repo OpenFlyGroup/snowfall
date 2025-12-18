@@ -11,7 +11,7 @@
   },
   "homepage": "https://github.com/OpenFlyGroup/snowfall",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Beautiful, customizable snowfall effects for React with accumulation and fading",
   "keywords": [
     "openfly",
