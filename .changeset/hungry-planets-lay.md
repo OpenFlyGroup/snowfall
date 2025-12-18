@@ -1,5 +1,0 @@
----
-"@openflygroup/snowfall": patch
----
-
-init
