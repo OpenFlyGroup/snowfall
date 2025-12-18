@@ -42,12 +42,10 @@ export class SnowEngine {
     this.createInitialSnowflakes();
   }
 
-  /*************  ✨ Windsurf Command ⭐  *************/
   /**
    * Starts the snowfall animation.
    * If the animation is already running, this method does nothing.
    */
-  /*******  98190bf2-a7d7-49f4-b479-d37bb8f3d379  *******/
   start() {
     if (this.isRunning) return;
     this.isRunning = true;
@@ -91,6 +89,22 @@ export class SnowEngine {
    */
   getSnowflakes() {
     return this.snowflakes;
+  }
+
+  /**
+   * Recycles a snowflake after it has interacted with the scene
+   * (for example, when it «прилипает» к элементу).
+   * Instead of letting the same flake fall through the element,
+   * we instantly move it back to the top with a new random X.
+   *
+   * @param {string} id - The id of the snowflake to recycle.
+   */
+  recycleSnowflake(id: string) {
+    const flake = this.snowflakes.find((f) => f.id === id);
+    if (!flake) return;
+
+    flake.y = -10;
+    flake.x = Math.random() * this.width;
   }
 
   /**

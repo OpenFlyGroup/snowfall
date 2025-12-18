@@ -13,6 +13,15 @@ interface SnowAccumulationProps {
   ) => React.ReactNode;
 }
 
+/**
+ * Component for rendering accumulated snowflakes on a specific element.
+ *
+ * @prop {string} elementId - The ID of the element on which to render the accumulated snowflakes.
+ * @prop {string} [className] - CSS classes for the container element.
+ * @prop {(flake: StuckSnowflake, currentTime: number) => React.ReactNode} [renderSnowflake] - A function that renders a single snowflake, given its properties and the current time.
+ *
+ * @returns {React.ReactNode} The rendered snowflakes, or `null` if there are no snowflakes to render.
+ */
 export function SnowAccumulation({
   elementId,
   className = "",
@@ -23,23 +32,51 @@ export function SnowAccumulation({
   const [snowflakes, setSnowflakes] = useState<StuckSnowflake[]>([]);
   const { stuckSnowflakes } = useSnowStore();
 
-  // Обновляем время для анимации
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
-    }, 100); // Обновляем 10 раз в секунду
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Обновляем снежинки
   useEffect(() => {
     const flakes = stuckSnowflakes.get(elementId) || [];
     setSnowflakes(flakes);
   }, [stuckSnowflakes, elementId]);
 
   const renderedFlakes = useMemo(() => {
-    return snowflakes.map((flake) => {
+    if (snowflakes.length === 0) return [];
+
+    const bucketWidth = 16;
+    const maxLevelsPerBucket = 6;
+
+    const flakesSorted = [...snowflakes].sort(
+      (a, b) => a.stuckTime - b.stuckTime
+    );
+    const bucketLevels = new Map<number, number>();
+
+    const laidOutFlakes = flakesSorted.map((flake) => {
+      const bucketIndex = Math.floor(flake.x / bucketWidth);
+      const currentLevel = bucketLevels.get(bucketIndex) ?? 0;
+      bucketLevels.set(bucketIndex, currentLevel + 1);
+
+      const level = Math.min(currentLevel, maxLevelsPerBucket - 1);
+
+      const baseY = flake.size;
+      const piledY = baseY + level * flake.size * 1.4;
+
+      const jitterSeed = flake.id.charCodeAt(0) || 0;
+      const jitter = ((jitterSeed % 3) - 1) * (Math.max(1, flake.size) * 0.4);
+
+      return {
+        ...flake,
+        piledY,
+        piledX: flake.x + jitter,
+      };
+    });
+
+    return laidOutFlakes.map((flake) => {
       if (renderSnowflake) {
         return renderSnowflake(flake, currentTime);
       }
@@ -53,8 +90,8 @@ export function SnowAccumulation({
           key={flake.id}
           className="absolute rounded-full bg-white"
           style={{
-            left: `${flake.x}px`,
-            top: `${flake.y}px`,
+            left: `${flake.piledX}px`,
+            top: `${flake.piledY}px`,
             width: `${flake.size * 2}px`,
             height: `${flake.size * 2}px`,
             opacity,

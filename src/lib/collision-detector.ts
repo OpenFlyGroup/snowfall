@@ -51,6 +51,19 @@ export class CollisionDetector {
   }
 
   /**
+   * Returns the cached bounding client rect for a registered element.
+   * This is useful when you need to convert global coordinates into
+   * element-local coordinates (for example, when rendering accumulated
+   * snow inside the element instead of in the global viewport).
+   *
+   * @param {string} id - The unique identifier of the element.
+   * @returns {DOMRect | null} The element's bounding rect or null if not found.
+   */
+  getElementRect(id: string): DOMRect | null {
+    return this.elementRects.get(id) ?? null;
+  }
+
+  /**
    * Updates the bounding box of the element with the given id.
    * This method should be called whenever the position or size of a registered element changes.
    * @param {string} id - The unique identifier of the element to update.

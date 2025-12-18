@@ -9,7 +9,7 @@
   "bugs": {
     "url": "https://github.com/OpenFlyGroup/snowfall/issues"
   },
-  "homepage": "https://github.com/OpenFlyGroup/snowfall",
+  "homepage": "https://openflygroup.github.io/snowfall/",
   "private": false,
   "version": "0.2.0",
   "description": "Beautiful, customizable snowfall effects for React with accumulation and fading",

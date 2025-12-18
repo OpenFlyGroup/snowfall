@@ -65,10 +65,24 @@ export function SnowCanvas({
   useEffect(() => {
     if (!config.accumulation) return;
 
+    const registeredIds: string[] = [];
+
     accumulationElements.forEach((selector) => {
       const elements = document.querySelectorAll<HTMLElement>(selector);
       elements.forEach((element, index) => {
-        const id = `${selector}-${index}`;
+        // Try to use a stable, semantic identifier so that
+        // SnowAccumulation can reference the same element:
+        // 1) data-snow-id attribute
+        // 2) DOM id
+        // 3) fallback to selector-based id
+        const baseId =
+          element.dataset.snowId ||
+          element.id ||
+          `${selector.replace(/[^a-z0-9_-]/gi, "")}-${index}`;
+
+        const id = baseId;
+        registeredIds.push(id);
+
         collisionDetectorRef.current.registerElement(id, element, {
           priority: 0,
           accumulationArea: "top",
@@ -82,14 +96,22 @@ export function SnowCanvas({
     };
 
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      // Make sure we don't keep stale elements around
+      registeredIds.forEach((id) =>
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        collisionDetectorRef.current.unregisterElement(id)
+      );
+    };
   }, [accumulationElements, config.accumulation]);
 
   // check for collisions
   const checkCollisions = useCallback(() => {
     if (!engineRef.current || !config.accumulation) return;
 
-    const snowflakes = engineRef.current.getSnowflakes();
+    const engine = engineRef.current;
+    const snowflakes = engine.getSnowflakes();
     const now = Date.now();
 
     snowflakes.forEach((flake: SnowflakeConfig) => {
@@ -105,18 +127,29 @@ export function SnowCanvas({
           flake.y
         );
 
+        const rect = collisionDetectorRef.current.getElementRect(elementId);
+
+        // Convert collision point from viewport coordinates into
+        // element-local coordinates so that SnowAccumulation can render
+        // flakes correctly inside the target element.
+        const localX = rect ? collisionPoint.x - rect.left : collisionPoint.x;
+        const localY = rect ? collisionPoint.y - rect.top : collisionPoint.y;
+
         const stuckFlake: StuckSnowflake = {
           ...flake,
           stuck: true,
           stuckTime: now,
           fadeStart: now + config.fadeDelay,
           elementId,
-          x: collisionPoint.x,
-          y: collisionPoint.y,
+          x: localX,
+          y: localY,
         };
 
         addStuckSnowflake(elementId, stuckFlake);
         onSnowflakeStuck?.(elementId, stuckFlake);
+
+        // recycle snowflake
+        engine.recycleSnowflake(flake.id);
       }
     });
   }, [
