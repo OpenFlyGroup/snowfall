@@ -1,4 +1,4 @@
-import{j as n}from"./jsx-runtime-u17CrQMm.js";import{useMDXComponents as i}from"./index-8i81qGV5.js";import{M as r}from"./blocks-D8t1KOm5.js";import"./iframe-dgwSIbXt.js";import"./preload-helper-PPVm8Dsz.js";import"./index-B74seekV.js";function o(s){const e={code:"code",h1:"h1",h2:"h2",li:"li",ol:"ol",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...s.components};return n.jsxs(n.Fragment,{children:[n.jsx(r,{title:"Guides/How it works"}),`
+import{j as n}from"./jsx-runtime-u17CrQMm.js";import{useMDXComponents as i}from"./index-DqVz7AR1.js";import{M as r}from"./blocks-BkhkQwNZ.js";import"./iframe-DQzrXPAg.js";import"./preload-helper-PPVm8Dsz.js";import"./index-CfcSfBDw.js";function o(s){const e={code:"code",h1:"h1",h2:"h2",li:"li",ol:"ol",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...s.components};return n.jsxs(n.Fragment,{children:[n.jsx(r,{title:"Guides/How it works"}),`
 `,n.jsx(e.h1,{id:"how-it-works",children:"How it works"}),`
 `,n.jsxs(e.p,{children:[n.jsx(e.code,{children:"@openflygroup/snowfall"}),` is built as a small rendering engine plus a state store
 with a thin React wrapper on top.`]}),`

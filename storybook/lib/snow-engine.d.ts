@@ -23,12 +23,10 @@ export declare class SnowEngine {
      * Also creates the initial snowflakes.
      */
     init(): void;
-    /*************  ✨ Windsurf Command ⭐  *************/
     /**
      * Starts the snowfall animation.
      * If the animation is already running, this method does nothing.
      */
-    /*******  98190bf2-a7d7-49f4-b479-d37bb8f3d379  *******/
     start(): void;
     /**
      * Stops the snowfall animation.
@@ -51,6 +49,15 @@ export declare class SnowEngine {
      * @returns {SnowflakeConfig[]} The current array of snowflakes.
      */
     getSnowflakes(): SnowflakeConfig[];
+    /**
+     * Recycles a snowflake after it has interacted with the scene
+     * (for example, when it «прилипает» к элементу).
+     * Instead of letting the same flake fall through the element,
+     * we instantly move it back to the top with a new random X.
+     *
+     * @param {string} id - The id of the snowflake to recycle.
+     */
+    recycleSnowflake(id: string): void;
     /**
      * Adds a new snowflake to the snow engine's array of snowflakes.
      * Any properties not specified in the partial snowflake configuration will be randomly generated.
