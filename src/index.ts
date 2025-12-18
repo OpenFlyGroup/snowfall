@@ -1,4 +1,5 @@
 import type { SnowConfig } from "./types";
+import "./index.css";
 
 export { SnowCanvas } from "./components/SnowCanvas";
 export { SnowAccumulation } from "./components/SnowAccumulation";

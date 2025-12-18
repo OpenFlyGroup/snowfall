@@ -4,7 +4,9 @@ import { resolve } from "path";
 
 export default defineConfig({
   plugins: [react()],
-  base: "./",
+  // GitHub Pages will serve the site from /snowfall/
+  // (https://openflygroup.github.io/snowfall/)
+  base: "/snowfall/",
   build: {
     outDir: "dist-demo",
     emptyOutDir: true,

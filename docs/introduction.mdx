@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/blocks";
+import { Meta, Story } from "@storybook/blocks";
 import { SnowCanvas } from "../src/components/SnowCanvas";
 
 <Meta title="Introduction" />
@@ -39,22 +39,19 @@ import { SnowCanvas } from "../src/components/SnowCanvas";
         </div>
       </div>
     );
-
-}}
-
+  }}
 </Story>
 
-## ✨ Features
+## ✨ Возможности
 
-- **🎨 Fully Customizable** - Control size, color, shape, and speed of snowflakes
-- **🏔️ Smart Accumulation** - Snow accumulates on DOM elements with physics
-- **⏱️ Auto Fading** - Snowflakes fade naturally after specified time
-- **📱 Performant** - Canvas-based rendering for smooth 60fps animations
-- **🎯 TypeScript** - Fully typed with excellent IDE support
-- **🔧 Extensible** - Plugin system and custom renderers
-- **🎮 Interactive Controls** - Built-in controls panel
+- **🎨 Полная кастомизация** — размер, цвет, форма и скорость снежинок
+- **🏔️ Накопление на элементах** — снег «налипает» на выбранные DOM-элементы
+- **⏱️ Авто-затухание** — постепенное исчезновение снега по таймеру
+- **📱 Высокая производительность** — отрисовка через canvas с плавной анимацией
+- **🎯 TypeScript** — полностью типизированный API
+- **🎮 Панель управления** — готовые контролы для изменения настроек на лету
 
-## 🚀 Quick Start
+## 🚀 Быстрый старт
 
 ```bash
 npm install @openflygroup/snowfall zustand
@@ -80,3 +77,9 @@ function WinterApp() {
   );
 }
 ```
+
+## 📚 Далее
+
+- Откройте раздел **API Reference** для подробного описания пропсов
+- Посмотрите готовые истории компонентов `SnowCanvas`, `SnowControls` и `SnowAccumulation`
+- Зайдите на сайт-демо чтобы увидеть библиотеку в действии

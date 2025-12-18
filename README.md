@@ -49,9 +49,19 @@ function App() {
 }
 ```
 
+### Styles
+
+By default, the library imports its own prebuilt Tailwind‑based stylesheet.  
+If you prefer an explicit import, you can do:
+
+```ts
+import "@openflygroup/snowfall/styles";
+```
+
 ## Documentation
 
-Visit our Storybook for full documentation and examples.
+- Docs site (GitHub Pages): `https://openflygroup.github.io/snowfall/`
+- Storybook with live examples: `https://openflygroup.github.io/snowfall/storybook/`
 
 ## Contributing
 

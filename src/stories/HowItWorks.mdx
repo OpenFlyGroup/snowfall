@@ -1,0 +1,73 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/How it works" />
+
+# How it works
+
+`@openflygroup/snowfall` is built as a small rendering engine plus a state store
+with a thin React wrapper on top.
+
+## High‑level architecture
+
+```text
+┌──────────────────────────────┐
+│ React app                    │
+│                              │
+│  ┌────────────────────────┐  │
+│  │  SnowCanvas           │  │
+│  │  SnowAccumulation     │  │
+│  │  SnowControls / Hook  │  │
+│  └────────────────────────┘  │
+│              │                │
+└──────────────┼────────────────┘
+               │ uses
+               ▼
+┌─────────────────────────────────────┐
+│ Zustand store (`useSnowStore`)     │
+│ - global config (intensity, colors)│
+│ - list of stuck snowflakes         │
+│ - presets and helpers              │
+└─────────────────────────────────────┘
+               │ drives
+               ▼
+┌─────────────────────────────────────┐
+│ SnowEngine (canvas renderer)       │
+│ - creates & animates snowflakes    │
+│ - updates positions & rotations    │
+│ - asks CollisionDetector where     │
+│   flakes should stick              │
+└─────────────────────────────────────┘
+               │ queries
+               ▼
+┌─────────────────────────────────────┐
+│ CollisionDetector                   │
+│ - tracks DOM element bounding rects │
+│ - detects hits & top zones         │
+└─────────────────────────────────────┘
+```
+
+## Rendering flow
+
+1. `SnowCanvas` mounts a full‑screen `<canvas>` overlay and creates a `SnowEngine`.
+2. `SnowEngine` reads the current `SnowConfig` from the store and spawns snowflakes.
+3. On every animation frame it:
+   - updates snowflake positions based on gravity, wind and rotation,
+   - checks collisions via `CollisionDetector`,
+   - pushes stuck snowflakes into the store.
+4. `SnowAccumulation` subscribes to the store and renders stuck flakes as absolutely
+   positioned DOM nodes on top of your elements.
+5. A small interval in `SnowCanvas` fades out old flakes according to `fadeDelay`
+   and `fadeDuration`.
+
+## Customisation surface
+
+- **Visuals**: `colors`, `snowflakeSize`, `shapes` (`circle`, `star`, `cross`).
+- **Behavior**: `intensity`, `windStrength`, `accumulation`, `fadeDelay`, `fadeDuration`.
+- **Control**:
+  - `SnowControls` — ready‑made floating panel.
+  - `useSnow()` — hook that exposes `updateConfig`, `toggle`, `clearAllSnow`, counters, etc.
+  - `presets` and `createSnowConfig` — helpers for reusable configurations.
+
+Use this page as a mental model when tweaking performance or adding your own presets.
+
+

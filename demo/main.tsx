@@ -60,7 +60,7 @@ interface DemoCard {
 }
 
 function DemoApp() {
-  const { updateConfig, clearAllSnow } = useSnow();
+  const { updateConfig, clearAllSnow, getSnowflakeCount } = useSnow();
 
   const presets: PresetCard[] = [
     { name: "Light Snow", intensity: 50, color: "bg-blue-500" },
@@ -100,6 +100,72 @@ function DemoApp() {
 
       <main className="max-w-6xl mx-auto relative z-10">
         <section className="mb-12 relative z-20">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">How it works</h2>
+          <p className="mb-4 opacity-90">
+            <strong>@openflygroup/snowfall</strong> renders snowfall using a{" "}
+            <code>canvas</code> overlay and a small physics engine. Snowflakes
+            are animated on the GPU-friendly canvas, while collisions with your
+            DOM elements are tracked in a separate store so snow can
+            &quot;stick&quot; on top of cards, headers and buttons.
+          </p>
+          <p className="mb-4 opacity-90">
+            You control everything via React components and hooks:{" "}
+            <code>SnowCanvas</code> for the global overlay,{" "}
+            <code>SnowAccumulation</code> for per-element snow, and{" "}
+            <code>SnowControls</code> or <code>useSnow()</code> for changing
+            intensity, colors and behavior at runtime.
+          </p>
+          <p className="mb-6 opacity-90">
+            The demo page itself is built with Tailwind CSS classes that are
+            precompiled into the library&apos;s bundled stylesheet, so you can
+            drop the effect into any React app with minimal setup.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <a
+              href="https://github.com/OpenFlyGroup/snowfall"
+              target="_blank"
+              rel="noreferrer"
+              className="card relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors"
+            >
+              <h3 className="text-xl font-bold mb-2">GitHub</h3>
+              <p className="opacity-80 mb-2">
+                Browse the source code, open issues or contribute improvements.
+              </p>
+              <span className="text-sm opacity-80">
+                github.com/OpenFlyGroup/snowfall
+              </span>
+            </a>
+
+            <a
+              href="https://openflygroup.github.io/snowfall/storybook/"
+              target="_blank"
+              rel="noreferrer"
+              className="card relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors"
+            >
+              <h3 className="text-xl font-bold mb-2">Storybook</h3>
+              <p className="opacity-80 mb-2">
+                Interactive gallery of components, props and usage examples.
+              </p>
+              <span className="text-sm opacity-80">
+                /snowfall/storybook/
+              </span>
+            </a>
+
+            <div className="card relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <h3 className="text-xl font-bold mb-2">Live stats</h3>
+              <p className="opacity-80 mb-2">
+                Current number of stuck snowflakes across the page.
+              </p>
+              <p className="text-2xl font-bold">
+                {getSnowflakeCount()}{" "}
+                <span className="text-sm font-medium opacity-80">
+                  flakes
+                </span>
+              </p>
+            </div>
+          </div>
+
           <h2 className="text-2xl md:text-3xl font-bold mb-6">Presets</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {presets.map((preset) => (

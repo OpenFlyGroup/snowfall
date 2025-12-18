@@ -8,6 +8,14 @@ export class SnowEngine {
   private lastTime = 0;
   private isRunning = false;
   private config: SnowConfig = {} as SnowConfig;
+  // Logical canvas size in CSS pixels (used for physics & collisions)
+  private width = 0;
+  private height = 0;
+
+  // Stable resize handler to add/remove from window events
+  private handleResize = () => {
+    this.resizeCanvas();
+  };
 
   /**
    * Constructor for the SnowEngine class.
@@ -30,7 +38,7 @@ export class SnowEngine {
    */
   init() {
     this.resizeCanvas();
-    window.addEventListener("resize", this.resizeCanvas.bind(this));
+    window.addEventListener("resize", this.handleResize);
     this.createInitialSnowflakes();
   }
 
@@ -64,7 +72,7 @@ export class SnowEngine {
    */
   destroy() {
     this.stop();
-    window.removeEventListener("resize", this.resizeCanvas.bind(this));
+    window.removeEventListener("resize", this.handleResize);
     this.snowflakes = [];
   }
 
@@ -95,7 +103,7 @@ export class SnowEngine {
     const id = Math.random().toString(36).substr(2, 9);
     this.snowflakes.push({
       id,
-      x: flake.x ?? Math.random() * this.canvas.width,
+      x: flake.x ?? Math.random() * this.width,
       y: flake.y ?? -10,
       size: flake.size ?? this.randomSize(),
       speed: flake.speed ?? Math.random() * 1.5 + 0.5,
@@ -118,10 +126,17 @@ export class SnowEngine {
     const dpr = window.devicePixelRatio || 1;
     const rect = this.canvas.getBoundingClientRect();
 
+    // Store logical size in CSS pixels for physics & collisions
+    this.width = rect.width;
+    this.height = rect.height;
+
+    // Match backing store size to DPR for sharp rendering
     this.canvas.width = rect.width * dpr;
     this.canvas.height = rect.height * dpr;
 
-    this.ctx.scale(dpr, dpr);
+    // Reset transform then apply DPR scaling so all drawing
+    // still uses logical CSS pixel coordinates.
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     this.canvas.style.width = `${rect.width}px`;
     this.canvas.style.height = `${rect.height}px`;
   }
@@ -176,14 +191,14 @@ export class SnowEngine {
       flake.rotation += flake.rotationSpeed * normalDelta;
 
       // return to top if out of bounds
-      if (flake.y > this.canvas.height) {
+      if (flake.y > this.height) {
         flake.y = -10;
-        flake.x = Math.random() * this.canvas.width;
+        flake.x = Math.random() * this.width;
       }
 
       // wrap around horizontally
-      if (flake.x > this.canvas.width) flake.x = 0;
-      if (flake.x < 0) flake.x = this.canvas.width;
+      if (flake.x > this.width) flake.x = 0;
+      if (flake.x < 0) flake.x = this.width;
     });
   }
 

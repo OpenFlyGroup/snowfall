@@ -1,4 +1,5 @@
 import { Meta } from "@storybook/blocks";
+import { SnowCanvas } from "../src/components/SnowCanvas";
 import {
   ArgTypes,
   Description,
@@ -12,15 +13,15 @@ import {
 
 # API Reference
 
-## SnowCanvas Component
+## `SnowCanvas`
 
-The main component that renders snowfall effects.
+Основной компонент, который отрисовывает снег на всём экране или в заданной области.
 
 ### Props
 
 <ArgTypes of={SnowCanvas} />
 
-### Example Usage
+### Пример
 
 ```tsx
 import { SnowCanvas } from "@openflygroup/snowfall";
@@ -38,3 +39,12 @@ function App() {
   );
 }
 ```
+
+## Другие экспортируемые сущности
+
+- `SnowAccumulation` — отрисовка накопившегося снега на конкретном элементе (`elementId`)
+- `SnowControls` — панель управления интенсивностью, темами и накоплением
+- `useSnow` — хук для программного управления конфигом снега
+- `useSnowStore` — прямой доступ к Zustand-стоянию (для продвинутых сценариев)
+- `presets` — готовые пресеты интенсивности и цветовых тем
+- `createSnowConfig` — утилита для создания конфига с дефолтами
