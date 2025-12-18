@@ -7,6 +7,9 @@ export declare class SnowEngine {
     private lastTime;
     private isRunning;
     private config;
+    private width;
+    private height;
+    private handleResize;
     /**
      * Constructor for the SnowEngine class.
      * @param {HTMLCanvasElement} canvas - The canvas element on which to render the snowfall effect.
