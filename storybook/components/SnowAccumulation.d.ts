@@ -14,6 +14,6 @@ interface SnowAccumulationProps {
  *
  * @returns {React.ReactNode} The rendered snowflakes, or `null` if there are no snowflakes to render.
  */
-export declare function SnowAccumulation({ elementId, className, renderSnowflake, }: SnowAccumulationProps): import("react/jsx-runtime").JSX.Element | null;
+export declare function SnowAccumulation({ elementId, className, renderSnowflake, }: SnowAccumulationProps): React.JSX.Element | null;
 export {};
 //# sourceMappingURL=SnowAccumulation.d.ts.map

@@ -1,4 +1,4 @@
-import{j as n}from"./jsx-runtime-u17CrQMm.js";import{useMDXComponents as r}from"./index-Rym8YWEC.js";import{M as c,A as l}from"./blocks-oS4neMS7.js";import{S as i}from"./SnowCanvas-BTTQidX0.js";import"./iframe-wzn6Wl5u.js";import"./preload-helper-PPVm8Dsz.js";import"./index-8iV_MrZw.js";import"./snow-store-DGN8uvrB.js";function o(s){const e={code:"code",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",pre:"pre",ul:"ul",...r(),...s.components};return n.jsxs(n.Fragment,{children:[n.jsx(c,{title:"API Reference"}),`
+import{j as n}from"./jsx-runtime-u17CrQMm.js";import{u as r,M as c,A as l}from"./blocks-DC2fhqjD.js";import{S as i}from"./SnowCanvas-gWvx85XO.js";import"./preload-helper-PPVm8Dsz.js";import"./iframe-hau0a6yw.js";import"./index-DWH6TMWy.js";import"./snow-store-y1pg4JU8.js";function o(s){const e={code:"code",h1:"h1",h2:"h2",h3:"h3",li:"li",p:"p",pre:"pre",ul:"ul",...r(),...s.components};return n.jsxs(n.Fragment,{children:[n.jsx(c,{title:"API Reference"}),`
 `,n.jsx(e.h1,{id:"api-reference",children:"API Reference"}),`
 `,n.jsx(e.h2,{id:"snowcanvas",children:n.jsx(e.code,{children:"SnowCanvas"})}),`
 `,n.jsx(e.p,{children:"Основной компонент, который отрисовывает снег на всём экране или в заданной области."}),`
@@ -28,4 +28,4 @@ function App() {
 `,n.jsxs(e.li,{children:[n.jsx(e.code,{children:"useSnowStore"})," — прямой доступ к Zustand-стоянию (для продвинутых сценариев)"]}),`
 `,n.jsxs(e.li,{children:[n.jsx(e.code,{children:"presets"})," — готовые пресеты интенсивности и цветовых тем"]}),`
 `,n.jsxs(e.li,{children:[n.jsx(e.code,{children:"createSnowConfig"})," — утилита для создания конфига с дефолтами"]}),`
-`]})]})}function u(s={}){const{wrapper:e}={...r(),...s.components};return e?n.jsx(e,{...s,children:n.jsx(o,{...s})}):o(s)}export{u as default};
+`]})]})}function m(s={}){const{wrapper:e}={...r(),...s.components};return e?n.jsx(e,{...s,children:n.jsx(o,{...s})}):o(s)}export{m as default};

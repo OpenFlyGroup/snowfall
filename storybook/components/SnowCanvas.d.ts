@@ -13,6 +13,6 @@ interface SnowCanvasProps {
  * @prop {string[]} [accumulationElements] - Selectors for elements where snowflakes should accumulate.
  * @prop {function} [onSnowflakeStuck] - Function called when a snowflake collides with an element.
  */
-export declare function SnowCanvas({ className, style, accumulationElements, onSnowflakeStuck, }: SnowCanvasProps): import("react/jsx-runtime").JSX.Element | null;
+export declare function SnowCanvas({ className, style, accumulationElements, onSnowflakeStuck, }: SnowCanvasProps): import("react").JSX.Element | null;
 export {};
 //# sourceMappingURL=SnowCanvas.d.ts.map

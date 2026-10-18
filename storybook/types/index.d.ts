@@ -9,6 +9,9 @@ export interface SnowflakeConfig {
     rotation: number;
     rotationSpeed: number;
     shape: "circle" | "star" | "cross";
+    /** Stable index into `SnowConfig.colors`, assigned once when the flake is
+     * created so its colour does not flicker between frames. */
+    colorIndex?: number;
 }
 export interface StuckSnowflake extends SnowflakeConfig {
     stuck: boolean;

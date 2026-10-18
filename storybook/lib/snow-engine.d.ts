@@ -112,9 +112,12 @@ export declare class SnowEngine {
      */
     private drawCross;
     /**
-     * Returns a random color from the configured colors list, with the opacity replaced by the given value.
-     * @param {number} opacity - The opacity value to replace in the color string.
-     * @returns {string} A color string with the given opacity value.
+     * Resolves a snowflake's fill colour from the configured colours list.
+     * Uses the flake's stable `colorIndex` (taken modulo the palette length) so a
+     * flake keeps the same colour across frames instead of flickering, while
+     * still reacting immediately when the palette changes on a theme switch.
+     * @param {SnowflakeConfig} flake - The snowflake being drawn.
+     * @returns {string} A colour string with the flake's opacity applied.
      */
     private getSnowflakeColor;
     /**

@@ -1,3 +1,4 @@
+import { default as React } from '../../node_modules/react';
 /**
  * Snowfall Controls
  *
@@ -5,5 +6,5 @@
  *
  * @returns {JSX.Element} The Snowfall Controls component.
  */
-export declare function SnowControls(): import("react/jsx-runtime").JSX.Element;
+export declare function SnowControls(): React.JSX.Element;
 //# sourceMappingURL=SnowControls.d.ts.map

@@ -1,4 +1,4 @@
-import{j as n}from"./jsx-runtime-u17CrQMm.js";import{useMDXComponents as i}from"./index-Rym8YWEC.js";import{M as r}from"./blocks-oS4neMS7.js";import"./iframe-wzn6Wl5u.js";import"./preload-helper-PPVm8Dsz.js";import"./index-8iV_MrZw.js";function o(s){const e={code:"code",h1:"h1",h2:"h2",li:"li",ol:"ol",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...s.components};return n.jsxs(n.Fragment,{children:[n.jsx(r,{title:"Guides/How it works"}),`
+import{j as n}from"./jsx-runtime-u17CrQMm.js";import{u as i,M as r}from"./blocks-DC2fhqjD.js";import"./preload-helper-PPVm8Dsz.js";import"./iframe-hau0a6yw.js";import"./index-DWH6TMWy.js";function o(s){const e={code:"code",h1:"h1",h2:"h2",li:"li",ol:"ol",p:"p",pre:"pre",strong:"strong",ul:"ul",...i(),...s.components};return n.jsxs(n.Fragment,{children:[n.jsx(r,{title:"Guides/How it works"}),`
 `,n.jsx(e.h1,{id:"how-it-works",children:"How it works"}),`
 `,n.jsxs(e.p,{children:[n.jsx(e.code,{children:"@openflygroup/snowfall"}),` is built as a small rendering engine plus a state store
 with a thin React wrapper on top.`]}),`
@@ -66,4 +66,4 @@ and `,n.jsx(e.code,{children:"fadeDuration"}),"."]}),`
 `]}),`
 `]}),`
 `]}),`
-`,n.jsx(e.p,{children:"Use this page as a mental model when tweaking performance or adding your own presets."})]})}function x(s={}){const{wrapper:e}={...i(),...s.components};return e?n.jsx(e,{...s,children:n.jsx(o,{...s})}):o(s)}export{x as default};
+`,n.jsx(e.p,{children:"Use this page as a mental model when tweaking performance or adding your own presets."})]})}function h(s={}){const{wrapper:e}={...i(),...s.components};return e?n.jsx(e,{...s,children:n.jsx(o,{...s})}):o(s)}export{h as default};
