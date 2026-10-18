@@ -74,16 +74,16 @@ export function SnowControls() {
   const themePresets: ThemePreset[] = [
     {
       name: "default",
-      config: { colors: ["rgba(255, 255, 255, 0.8)"] },
+      config: { colors: ["rgba(255, 255, 255, opacity)"] },
       color: "bg-gradient-to-br from-slate-100 to-slate-300",
     },
     {
       name: "blue",
       config: {
         colors: [
-          "rgba(255, 255, 255, 0.9)",
-          "rgba(173, 216, 230, 0.8)",
-          "rgba(135, 206, 250, 0.7)",
+          "rgba(255, 255, 255, opacity)",
+          "rgba(173, 216, 230, opacity)",
+          "rgba(135, 206, 250, opacity)",
         ],
       },
       color: "bg-gradient-to-br from-sky-100 to-blue-300",
@@ -92,9 +92,9 @@ export function SnowControls() {
       name: "purple",
       config: {
         colors: [
-          "rgba(255, 255, 255, 0.9)",
-          "rgba(216, 191, 216, 0.8)",
-          "rgba(221, 160, 221, 0.7)",
+          "rgba(255, 255, 255, opacity)",
+          "rgba(216, 191, 216, opacity)",
+          "rgba(221, 160, 221, opacity)",
         ],
       },
       color: "bg-gradient-to-br from-violet-100 to-purple-300",
@@ -103,9 +103,9 @@ export function SnowControls() {
       name: "gold",
       config: {
         colors: [
-          "rgba(255, 255, 255, 0.9)",
-          "rgba(255, 215, 0, 0.8)",
-          "rgba(255, 248, 220, 0.7)",
+          "rgba(255, 255, 255, opacity)",
+          "rgba(255, 215, 0, opacity)",
+          "rgba(255, 248, 220, opacity)",
         ],
       },
       color: "bg-gradient-to-br from-amber-100 to-yellow-300",

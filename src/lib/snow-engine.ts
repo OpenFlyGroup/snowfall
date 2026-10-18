@@ -49,8 +49,10 @@ export class SnowEngine {
   start() {
     if (this.isRunning) return;
     this.isRunning = true;
-    this.lastTime = performance.now();
-    this.animate();
+    // Seed the clock on the first real animation frame so the opening frame
+    // does not compute a huge delta from a pre-set performance.now() value.
+    this.lastTime = 0;
+    this.animationId = requestAnimationFrame(this.animate);
   }
 
   /**
@@ -114,7 +116,7 @@ export class SnowEngine {
    * @param {Partial<SnowflakeConfig>} flake - A partial snowflake configuration object.
    */
   addSnowflake(flake: Partial<SnowflakeConfig>) {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = Math.random().toString(36).slice(2, 11);
     this.snowflakes.push({
       id,
       x: flake.x ?? Math.random() * this.width,
@@ -126,6 +128,9 @@ export class SnowEngine {
       rotation: flake.rotation ?? 0,
       rotationSpeed: flake.rotationSpeed ?? (Math.random() - 0.5) * 0.02,
       shape: flake.shape ?? this.randomShape(),
+      colorIndex:
+        flake.colorIndex ??
+        Math.floor(Math.random() * Math.max(1, this.config.colors.length)),
     });
   }
 
@@ -151,8 +156,9 @@ export class SnowEngine {
     // Reset transform then apply DPR scaling so all drawing
     // still uses logical CSS pixel coordinates.
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.canvas.style.width = `${rect.width}px`;
-    this.canvas.style.height = `${rect.height}px`;
+    // NOTE: do not touch canvas.style.width/height here. The canvas is laid
+    // out by CSS (width/height 100% inside a fixed container); pinning it to
+    // fixed pixels would stop it from tracking future viewport resizes.
   }
 
   /**
@@ -170,7 +176,10 @@ export class SnowEngine {
   private animate = (time = 0) => {
     if (!this.isRunning) return;
 
-    const deltaTime = time - this.lastTime;
+    // Seed on the first frame (lastTime === 0); afterwards clamp the delta so
+    // background-tab pauses or startup jitter cannot cause position jumps.
+    const deltaTime =
+      this.lastTime === 0 ? 0 : Math.min(Math.max(time - this.lastTime, 0), 100);
     this.lastTime = time;
 
     // update snowflakes
@@ -180,11 +189,13 @@ export class SnowEngine {
     this.clearCanvas();
     this.drawSnowflakes();
 
-    // add new snowflakes
+    // grow toward the configured intensity, or trim when it is lowered
     if (this.snowflakes.length < this.config.intensity) {
       if (Math.random() > 0.7) {
         this.addSnowflake({});
       }
+    } else if (this.snowflakes.length > this.config.intensity) {
+      this.snowflakes.splice(this.config.intensity);
     }
 
     this.animationId = requestAnimationFrame(this.animate);
@@ -227,7 +238,7 @@ export class SnowEngine {
       this.ctx.translate(flake.x, flake.y);
       this.ctx.rotate(flake.rotation);
 
-      this.ctx.fillStyle = this.getSnowflakeColor(flake.opacity);
+      this.ctx.fillStyle = this.getSnowflakeColor(flake);
 
       switch (flake.shape) {
         case "star":
@@ -293,14 +304,21 @@ export class SnowEngine {
   }
 
   /**
-   * Returns a random color from the configured colors list, with the opacity replaced by the given value.
-   * @param {number} opacity - The opacity value to replace in the color string.
-   * @returns {string} A color string with the given opacity value.
+   * Resolves a snowflake's fill colour from the configured colours list.
+   * Uses the flake's stable `colorIndex` (taken modulo the palette length) so a
+   * flake keeps the same colour across frames instead of flickering, while
+   * still reacting immediately when the palette changes on a theme switch.
+   * @param {SnowflakeConfig} flake - The snowflake being drawn.
+   * @returns {string} A colour string with the flake's opacity applied.
    */
-  private getSnowflakeColor(opacity: number): string {
-    const color =
-      this.config.colors[Math.floor(Math.random() * this.config.colors.length)];
-    return color.replace("opacity", opacity.toString());
+  private getSnowflakeColor(flake: SnowflakeConfig): string {
+    const colors = this.config.colors;
+    if (colors.length === 0) {
+      return `rgba(255, 255, 255, ${flake.opacity})`;
+    }
+
+    const index = (flake.colorIndex ?? 0) % colors.length;
+    return colors[index].replace("opacity", flake.opacity.toString());
   }
 
   /**

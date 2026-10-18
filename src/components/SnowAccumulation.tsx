@@ -13,6 +13,10 @@ interface SnowAccumulationProps {
   ) => React.ReactNode;
 }
 
+// Stable empty fallback so selecting a missing element does not
+// produce a new array reference on every store update.
+const EMPTY_FLAKES: StuckSnowflake[] = [];
+
 /**
  * Component for rendering accumulated snowflakes on a specific element.
  *
@@ -27,23 +31,31 @@ export function SnowAccumulation({
   className = "",
   renderSnowflake,
 }: SnowAccumulationProps) {
-  // eslint-disable-next-line react-hooks/purity
-  const [currentTime, setCurrentTime] = useState(Date.now());
-  const [snowflakes, setSnowflakes] = useState<StuckSnowflake[]>([]);
-  const { stuckSnowflakes } = useSnowStore();
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
+  const snowflakes = useSnowStore(
+    (state) => state.stuckSnowflakes.get(elementId) ?? EMPTY_FLAKES
+  );
+  const fadeDuration = useSnowStore((state) => state.config.fadeDuration);
 
+  // Only run the clock while a fade is still in progress. When nothing is
+  // fading (including an idle element) there is no time-dependent work.
   useEffect(() => {
+    const hasPendingFade = () =>
+      snowflakes.some(
+        (flake) =>
+          flake.fadeStart !== undefined &&
+          Date.now() < flake.fadeStart + fadeDuration
+      );
+
+    if (!hasPendingFade()) return;
+
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
+      if (!hasPendingFade()) clearInterval(interval);
     }, 100);
 
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const flakes = stuckSnowflakes.get(elementId) || [];
-    setSnowflakes(flakes);
-  }, [stuckSnowflakes, elementId]);
+  }, [snowflakes, fadeDuration]);
 
   const renderedFlakes = useMemo(() => {
     if (snowflakes.length === 0) return [];
@@ -82,7 +94,7 @@ export function SnowAccumulation({
       }
 
       const opacity = flake.fadeStart
-        ? Math.max(0, 1 - (currentTime - flake.fadeStart) / 2000)
+        ? Math.max(0, 1 - (currentTime - flake.fadeStart) / fadeDuration)
         : flake.opacity;
 
       return (
@@ -101,7 +113,7 @@ export function SnowAccumulation({
         />
       );
     });
-  }, [snowflakes, currentTime, renderSnowflake]);
+  }, [snowflakes, currentTime, fadeDuration, renderSnowflake]);
 
   if (snowflakes.length === 0) return null;
 
