@@ -82,16 +82,17 @@ export const useSnowStore = create<SnowState & SnowActions>()(
 
       addStuckSnowflake: (elementId, flake) =>
         set((state) => {
-          const elementSnowflakes = state.stuckSnowflakes.get(elementId) || [];
-          const config = get().config;
+          const existing = state.stuckSnowflakes.get(elementId) ?? [];
+          const maxStuck = get().config.maxStuckSnowflakes;
 
-          // enforce max stuck snowflakes per element
-          if (elementSnowflakes.length >= config.maxStuckSnowflakes) {
-            // delete oldest
-            elementSnowflakes.shift();
-          }
+          // enforce max stuck snowflakes per element, dropping the oldest
+          const trimmed =
+            existing.length >= maxStuck
+              ? existing.slice(existing.length - maxStuck + 1)
+              : existing;
 
-          elementSnowflakes.push(flake);
+          // build a new array so consumers see a stable-but-changed reference
+          const elementSnowflakes = [...trimmed, flake];
           const newMap = new Map(state.stuckSnowflakes);
           newMap.set(elementId, elementSnowflakes);
 

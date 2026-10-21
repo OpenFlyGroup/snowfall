@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { SnowEngine } from "../lib/snow-engine";
 import { CollisionDetector } from "../lib/collision-detector";
 import { useSnowStore } from "../stores/snow-store";
@@ -13,6 +13,10 @@ interface SnowCanvasProps {
   onSnowflakeStuck?: (elementId: string, flake: StuckSnowflake) => void;
 }
 
+// Stable default so the registration effect does not re-run every render
+// when no selectors prop is supplied.
+const EMPTY_SELECTORS: string[] = [];
+
 /**
  * Component for rendering snowfall effect on a canvas with snowflake accumulation on specified elements.
  *
@@ -24,18 +28,25 @@ interface SnowCanvasProps {
 export function SnowCanvas({
   className = "",
   style,
-  accumulationElements = [],
+  accumulationElements = EMPTY_SELECTORS,
   onSnowflakeStuck,
 }: SnowCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<SnowEngine | null>(null);
-  const collisionDetectorRef = useRef<CollisionDetector>(
-    new CollisionDetector()
-  );
+  // Lazily created once and never re-assigned, so it is stable across renders
+  // and safe to read during render (unlike a ref).
+  const [collisionDetector] = useState(() => new CollisionDetector());
   const stuckCheckRef = useRef<number | undefined>(undefined);
 
-  const { isEnabled, config, addStuckSnowflake, removeStuckSnowflake } =
-    useSnowStore();
+  // Subscribe only to the values this component renders with. Actions are
+  // stable references, so this avoids re-rendering on every stuck-flake update
+  // that a whole-store subscription would otherwise receive.
+  const isEnabled = useSnowStore((state) => state.isEnabled);
+  const config = useSnowStore((state) => state.config);
+  const addStuckSnowflake = useSnowStore((state) => state.addStuckSnowflake);
+  const removeStuckSnowflake = useSnowStore(
+    (state) => state.removeStuckSnowflake
+  );
 
   // initialize snow engine
   useEffect(() => {
@@ -83,28 +94,38 @@ export function SnowCanvas({
         const id = baseId;
         registeredIds.push(id);
 
-        collisionDetectorRef.current.registerElement(id, element, {
+        collisionDetector.registerElement(id, element, {
           priority: 0,
           accumulationArea: "top",
         });
       });
     });
 
-    // update rects on resize
-    const handleResize = () => {
-      collisionDetectorRef.current.updateRects();
+    // Keep cached rects in sync when the viewport resizes or the page (or any
+    // inner container) scrolls, otherwise accumulation targets go stale after
+    // movement. Throttled to one refresh per frame to avoid layout thrash.
+    let rectRefreshQueued = false;
+    const refreshRects = () => {
+      if (rectRefreshQueued) return;
+      rectRefreshQueued = true;
+      requestAnimationFrame(() => {
+        rectRefreshQueued = false;
+        collisionDetector.updateRects();
+      });
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", refreshRects);
+    window.addEventListener("scroll", refreshRects, {
+      passive: true,
+      capture: true,
+    });
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", refreshRects);
+      window.removeEventListener("scroll", refreshRects, { capture: true });
       // Make sure we don't keep stale elements around
-      registeredIds.forEach((id) =>
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        collisionDetectorRef.current.unregisterElement(id)
-      );
+      registeredIds.forEach((id) => collisionDetector.unregisterElement(id));
     };
-  }, [accumulationElements, config.accumulation]);
+  }, [accumulationElements, config.accumulation, collisionDetector]);
 
   // check for collisions
   const checkCollisions = useCallback(() => {
@@ -115,19 +136,19 @@ export function SnowCanvas({
     const now = Date.now();
 
     snowflakes.forEach((flake: SnowflakeConfig) => {
-      const elementId = collisionDetectorRef.current.checkCollision(
+      const elementId = collisionDetector.checkCollision(
         flake.x,
         flake.y
       );
 
       if (elementId) {
-        const collisionPoint = collisionDetectorRef.current.getCollisionPoint(
+        const collisionPoint = collisionDetector.getCollisionPoint(
           elementId,
           flake.x,
           flake.y
         );
 
-        const rect = collisionDetectorRef.current.getElementRect(elementId);
+        const rect = collisionDetector.getElementRect(elementId);
 
         // Convert collision point from viewport coordinates into
         // element-local coordinates so that SnowAccumulation can render
@@ -157,6 +178,7 @@ export function SnowCanvas({
     config.fadeDelay,
     addStuckSnowflake,
     onSnowflakeStuck,
+    collisionDetector,
   ]);
 
   // animate stuck snowflakes

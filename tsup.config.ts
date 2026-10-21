@@ -8,8 +8,8 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   minify: true,
-  treeshake: true,
-  external: ["react", "react-dom", "zustand"],
+  treeshake: false,
+  external: ["react", "react-dom", "zustand", "./index.css"],
   outDir: "dist",
   injectStyle: false,
   banner: {
